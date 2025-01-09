@@ -1,0 +1,8 @@
+servers:
+  hosts:
+    ns-server:
+      ansible_hosts: 192.168.57.10
+    ftp-server:
+      ansible_hosts: 192.168.57.20
+  vars:
+    ansible_user: vagrant
