@@ -6,7 +6,7 @@ $TTL    604800
 $ORIGIN sri.ies.
 
 @       IN      SOA     ns.sri.ies. root.sri.ies. (
-                         2         ; Serial
+                         3         ; Serial
                     604800         ; Refresh
                      86400         ; Retry
                    2419200         ; Expire

@@ -3,7 +3,7 @@ options {
 
 	 forwarders {
 		1.1.1.1;
-	 }
+	 };
 
 	dnssec-validation yes;
 	listen-on { any; };

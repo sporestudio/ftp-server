@@ -6,7 +6,7 @@ $TTL    604800
 $ORIGIN 57.168.192.in-addr.arpa.
 
 @       IN      SOA     ns.sri.ies. root.sri.ies. (
-                         2         ; Serial
+                         3         ; Serial
                     604800         ; Refresh
                      86400         ; Retry
                    2419200         ; Expire
