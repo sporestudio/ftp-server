@@ -1,4 +1,3 @@
 .vagrant/*
-.vagrant/rgloader/*
 .vscode/*
 Vagrantfile
