@@ -1,12 +1,12 @@
 zone "sri.ies" {
     type master;
-    file "/etc/bind/db.sri.ies";
+    file "/var/lib/bind/db.sri.ies";
     allow-transfer { 192.168.57.10; };
 };
 
 zone "57.168.192.in-addr.arpa" {
     type master;
-    file "/etc/bind/rev.sri.ies";
+    file "/var/lib/bind/rev.sri.ies";
     allow-transfer { 192.168.57.10; };
 };
 
