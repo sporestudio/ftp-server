@@ -1,0 +1,27 @@
+- name: Configure of DNS Server
+  hosts: ns-server
+  become: True
+  tasks:
+    - name: Install Bind9
+      apt: name=bind9 update_cache=yes
+
+    - name: Copy DNS configuration files
+      ansible.builtin.copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: bind
+        group: bind 
+      loop:
+        - { src: ../files/dns/named, dest: /etc/default/ }
+        - { src: ../files/dns/named.conf.options, dest: /etc/bind/ }
+        - { src: ../files/dns/named.conf.local, dest: /etc/bind/ }
+        - { src: ../files/dns/db.sri.ies, dest: /var/lib/bind/ }
+        - { src: ../files/dns/rev.sri.ies, dest: /var/lib/bind/ }
+
+    - name: Copy resolv.conf
+      ansible.builtin.copy:
+        src: ../files/resolv.conf
+        dest: /etc/
+
+    - name: Restart bind9 service
+      service: name=bind9 state=restarted
