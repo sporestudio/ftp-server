@@ -1,6 +1,6 @@
 - name: Configure of DNS Server
   hosts: dns
-  become: True
+  become: true
   tasks:
     - name: Copy SSH public key
       copy:
@@ -11,7 +11,9 @@
         group: vagrant
 
     - name: Install Bind9
-      apt: name=bind9 update_cache=yes
+      ansible.builtin.package:
+        update_cache: yes
+        name: bind9
 
     - name: Copy DNS configuration files
       ansible.builtin.copy:
@@ -31,5 +33,11 @@
         src: ../files/resolv.conf
         dest: /etc/
 
+    - name: Validate bind9 config
+      command: named-checkconf
+
     - name: Restart bind9 service
-      service: name=bind9 state=restarted
+      systemd:
+        name: bind9
+        enabled: true
+        state: restarted
