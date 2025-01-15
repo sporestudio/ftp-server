@@ -9,10 +9,29 @@
         mode: '0600'
         owner: vagrant
         group: vagrant
-    - name: Install FTP package.
+
+    - name: Install FTP package
       ansible.builtin.package:
         update_cache: True
         apt:
-         - ftp
+         - vsftps
+
+    - name: Install dependencies to obtain SSL certificate
+      ansible.builtin.package:
+        update_cache: True
+        apt: python3-cryptography 
+
+    - name: Create vsftpd config directory
+      file:
+        path: /etc/vsftpd
+        state: directory
+        owner: root
+        group: ftp
+        mode: 0750
+
+    - name: Generate SSL Private Key
+      openssl_privatekey:
+        path: /etc/ssl/private/ssl-cert-priv.key
+        size: 2048
 
 
