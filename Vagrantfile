@@ -17,7 +17,7 @@ Vagrant.configure("2") do |config|
       d.vm.network "private_network", ip: "192.168.57.10"
       d.vm.hostname="dns"
       d.vm.provision "ansible" do |ansible|
-        ansible.playbook = "ansible/ns.yml" # playbooks may change after I actually get to see them...
+        ansible.playbook = "ansible/ns.yml"
         ansible.config_file = "ansible/ansible.cfg"
         ansible.inventory_path = "ansible/inventory.yml"
       end
