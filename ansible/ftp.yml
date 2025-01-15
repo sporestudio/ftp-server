@@ -3,3 +3,12 @@
   tasks:
     - name: Ping test
       ping: 
+
+    - name: Copy SSH public key
+      copy:
+        src: ../keys/ssh-key.pub
+        dest: /home/vagrant/.ssh/authorized_keys
+        mode: '0600'
+        owner: vagrant
+        group: vagrant
+
