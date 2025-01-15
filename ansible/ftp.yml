@@ -1,0 +1,9 @@
+- name: Configure FTP server.
+  hosts: ftp
+  become: True
+  tasks:
+    - name: Install FTP package.
+      ansible.builtin.package:
+        update_cache: True
+        apt:
+         - ftp
