@@ -1,5 +1,5 @@
 - name: Configure of DNS Server
-  hosts: ns-server
+  hosts: dns
   become: True
   tasks:
     - name: Install Bind9
