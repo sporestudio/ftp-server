@@ -33,6 +33,27 @@
         group: ftp
         mode: 0750
 
+    - name: Generate SSL Private Key
+      openssl_privatekey:
+        path: /etc/ssl/private/ssl-cert-priv.key
+        size: 2048
+
+    - name: Generate sign request (CSR)
+      openssl_csr:
+        path: /etc/ssl/private/ssl-sign.csr
+        privatekey_path: /etc/ssl/private/ssl-cert-priv.key
+        common_name: "ssl-ftp-cert"
+        country_name: "ES"
+        organization_name: "IZV"
+        email_address: "jrodcas899@ieszaidinvergeles.org"
+
+    - name: Obtain SSL public key
+      openssl_certificate:
+        path: /etc/ssl/certs/ssl-cert-pub.pem
+        privatekey_path: /etc/ssl/private/ssl-cert-priv.key
+        csr_path: /etc/ssl/private/ssl-sign.csr
+        provider: selfsigned
+
     - name: Copy resolv.conf
       copy:
         src: ../files/resolv.conf
