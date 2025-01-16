@@ -54,6 +54,20 @@
         csr_path: /etc/ssl/private/ssl-sign.csr
         provider: selfsigned
 
+    - name: Copy configuration files 
+      ansible.builtin.copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: root
+        group: root
+      loop:
+        - { src: ../files/ftp/ftp.conf, dest: /etc/vsftpd/ }
+        - { src: ../files/ftp/mirror.conf, dest: /etc/vsftpd/ }
+        - { src: ../files/ftp/.message, dest: /etc/vsftpd/ }
+        - { src: ../files/ftp/vsftpd.chroot_list, dest: /etc/vsftpd/ }
+        - { src: ../files/ftp/systemd/vsftpd-mirror.service, dest: /etc/systemd/system/ }
+        - { src: ../files/ftp/systemd/vsftpd-ftp.service, dest: /etc/systemd/system/ }
+
     - name: Disable vsftpd default server
       service:
         name: vsftpd
