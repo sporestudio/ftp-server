@@ -1,9 +1,9 @@
 [Unit]
-Description=Service for Anonymous FTP server
+Description=Service for Local Users FTP server
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/vsftpd /etc/vsftpd/ftp.conf
+ExecStart=/usr/sbin/vsftpd /etc/vsftpd/ftp.conf
 ExecReload=/bin/kill -HUP $MAINPID
 ExecStartPre=/bin/mkdir -p /var/run/vsftpd/empty
 KillSignal=SIGTERM

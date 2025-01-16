@@ -3,7 +3,7 @@ Description=Service for Anonymous FTP server
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/vsftpd /etc/vsftpd/mirror.conf
+ExecStart=/usr/sbin/vsftpd /etc/vsftpd/mirror.conf
 ExecReload=/bin/kill -HUP $MAINPID
 ExecStartPre=/bin/mkdir -p /var/run/vsftpd/empty
 KillSignal=SIGTERM
