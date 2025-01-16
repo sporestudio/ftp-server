@@ -12,14 +12,18 @@
 
     - name: Install FTP package
       ansible.builtin.package:
-        update_cache: True
-        apt:
-         - vsftps
+        update_cache: yes
+        name: vsftpd
 
     - name: Install dependencies to obtain SSL certificate
       ansible.builtin.package:
-        update_cache: True
-        apt: python3-cryptography 
+        update_cache: yes
+        name: python3-cryptography 
+
+    - name: Install passlib for password hashing
+      ansible.builtin.package:
+        update_cache: yes
+        name: python3-passlib
 
     - name: Create vsftpd config directory
       file:
@@ -28,6 +32,21 @@
         owner: root
         group: ftp
         mode: 0750
+
+    - name: Copy resolv.conf
+      copy:
+        src: ../files/resolv.conf
+        dest: /etc/resolv.conf
+
+    - name: Create local user charles
+      user:
+        name: charles
+        password: "{{ '1234' | password_hash('sha512', 'saltcharles') }}"
+
+    - name: Create local user laura
+      user:
+        name: laura
+        password: "{{ '1234' | password_hash('sha512', 'saltlaura') }}"
 
    
 
