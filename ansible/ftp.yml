@@ -54,6 +54,26 @@
         csr_path: /etc/ssl/private/ssl-sign.csr
         provider: selfsigned
 
+    - name: Disable vsftpd default server
+      service:
+        name: vsftpd
+        enabled: no
+        state: stopped
+
+    - name: Enable service for anonymous FTP server
+      service:
+        name: vsftpd-mirror
+        enabled: yes
+        state: started
+        daemon_reload: yes
+
+    - name: Enable service for local users FTP server
+      service:
+        name: vsftpd-ftp
+        enabled: yes
+        state: started
+        daemon_reload: yes
+
     - name: Copy resolv.conf
       copy:
         src: ../files/resolv.conf
