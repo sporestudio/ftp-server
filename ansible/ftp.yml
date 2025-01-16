@@ -29,9 +29,6 @@
         group: ftp
         mode: 0750
 
-    - name: Generate SSL Private Key
-      openssl_privatekey:
-        path: /etc/ssl/private/ssl-cert-priv.key
-        size: 2048
+   
 
 
