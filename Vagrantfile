@@ -3,6 +3,7 @@
 
 Vagrant.configure("2") do |config|
     config.vm.box = "debian/bookworm64"
+    config.ssh.insert_key = false
     config.vm.define "ftp" do |s|
       s.vm.network "private_network", ip: "192.168.57.20"
       s.vm.network "private_network", ip: "192.168.57.30"
