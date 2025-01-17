@@ -76,8 +76,8 @@ def test_user_access(server_ip, username, password, chrooted):
 
 # Configuración del servidor FTP
 SERVER_IP = 'your.ftp.server.ip'
-ANONYMOUS_SERVER_IP = 'your.ftp.server.ip'  # IP del servidor FTP anónimo
-LOCAL_USERS_SERVER_IP = 'your.ftp.server.ip'  # IP del servidor FTP de usuarios locales
+ANONYMOUS_SERVER_IP = '192.168.57.20'  # IP del servidor FTP anónimo
+LOCAL_USERS_SERVER_IP = '192.168.57.30'  # IP del servidor FTP de usuarios locales
 
 # Pruebas para acceso anónimo
 print("Testing anonymous FTP access...")
