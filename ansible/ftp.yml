@@ -2,14 +2,6 @@
   hosts: ftp
   become: True
   tasks:
-    - name: Copy SSH public key
-      copy:
-        src: ../keys/ssh-key.pub
-        dest: /home/vagrant/.ssh/authorized_keys
-        mode: '0600'
-        owner: vagrant
-        group: vagrant
-
     - name: Install FTP package
       ansible.builtin.package:
         update_cache: yes
@@ -63,7 +55,7 @@
       loop:
         - { src: ../files/ftp/ftp.conf, dest: /etc/vsftpd/ }
         - { src: ../files/ftp/mirror.conf, dest: /etc/vsftpd/ }
-        - { src: ../files/ftp/.message, dest: /etc/vsftpd/ }
+        - { src: ../files/ftp/.message, dest: /srv/ftp }
         - { src: ../files/ftp/vsftpd.chroot_list, dest: /etc/vsftpd/ }
         - { src: ../files/ftp/systemd/vsftpd-mirror.service, dest: /etc/systemd/system/ }
         - { src: ../files/ftp/systemd/vsftpd-ftp.service, dest: /etc/systemd/system/ }
