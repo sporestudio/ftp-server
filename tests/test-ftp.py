@@ -1,12 +1,17 @@
 import ftplib
+from colorama import Fore, Style
 import os
+
+# Colors variables
+green = Fore.GREEN
+reset = Style.RESET_ALL
 
 def test_anonymous_access(server_ip):
     try:
         ftp = ftplib.FTP()
         ftp.connect(server_ip, 21)
         ftp.login()  # Login as anonymous
-        print("Anonymous login successful.")
+        print(f'{green}[*] Anonymous login successful.{reset}')
         
         # List directory contents
         ftp.retrlines('LIST')
@@ -34,7 +39,7 @@ def test_user_access(server_ip, username, password, chrooted):
         ftp = ftplib.FTP_TLS(LOCAL_USERS_SERVER_IP)
         ftp.login(username, password)
         ftp.prot_p()
-        print(f"Login successful for user {username}.")
+        print(f"{green}[*] Login successful for user {username}.{reset}")
         
         # List directory contents
         ftp.retrlines('LIST')
