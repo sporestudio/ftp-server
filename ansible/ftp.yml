@@ -12,11 +12,6 @@
         update_cache: yes
         name: python3-cryptography 
 
-    - name: Install passlib for password hashing
-      ansible.builtin.package:
-        update_cache: yes
-        name: python3-passlib
-
     - name: Create vsftpd config directory
       file:
         path: /etc/vsftpd
@@ -88,12 +83,12 @@
     - name: Create local user charles
       user:
         name: charles
-        password: "{{ '1234' | password_hash('sha512', 'saltcharles') }}"
+        password: "$6$zrhHqgEzqBWfELPs$mtw4BECKUKCxNHvyiPZYhat/k6ussxcwyLmbRAIEBavxe9Hg1ONoiEBvSvGVEeO6NQJbkXnVofpUBxn5EWjLO/"
 
     - name: Create local user laura
       user:
         name: laura
-        password: "{{ '1234' | password_hash('sha512', 'saltlaura') }}"
+        password: "$6$jjpYQgP5MUfGI3D5$T2a3aeKGc6aJIkl9CwiOYAEO6qRWGPoCdUDQnAVq2Cu0fJnE9W1riE1JOAGk7nsxFEg7FCG10URBmHL5BJyNa/"
 
    
 
