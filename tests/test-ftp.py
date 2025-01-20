@@ -31,9 +31,9 @@ def test_anonymous_access(server_ip):
 
 def test_user_access(server_ip, username, password, chrooted):
     try:
-        ftp = ftplib.FTP()
-        ftp.connect(server_ip, 2121)
+        ftp = ftplib.FTP_TLS(LOCAL_USERS_SERVER_IP)
         ftp.login(username, password)
+        ftp.prot_p()
         print(f"Login successful for user {username}.")
         
         # List directory contents
