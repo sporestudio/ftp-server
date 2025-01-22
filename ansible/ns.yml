@@ -14,11 +14,11 @@
         owner: bind
         group: bind 
       loop:
-        - { src: ../files/dns/named, dest: /etc/default/ }
-        - { src: ../files/dns/named.conf.options, dest: /etc/bind/ }
-        - { src: ../files/dns/named.conf.local, dest: /etc/bind/ }
-        - { src: ../files/dns/db.sri.ies, dest: /var/lib/bind/ }
-        - { src: ../files/dns/rev.sri.ies, dest: /var/lib/bind/ }
+        - { src: "{{ dns_path }}named", dest: /etc/default/ }
+        - { src: "{{ dns_path }}named.conf.options", dest: /etc/bind/ }
+        - { src: "{{ dns_path }}named.conf.local", dest: /etc/bind/ }
+        - { src: "{{ dns_path }}db.sri.ies", dest: /var/lib/bind/ }
+        - { src: "{{ dns_path }}rev.sri.ies", dest: /var/lib/bind/ }
 
     - name: Copy resolv.conf
       ansible.builtin.copy:

@@ -48,12 +48,12 @@
         owner: root
         group: root
       loop:
-        - { src: ../files/ftp/ftp.conf, dest: /etc/vsftpd/ }
-        - { src: ../files/ftp/mirror.conf, dest: /etc/vsftpd/ }
-        - { src: ../files/ftp/.message, dest: /srv/ftp }
-        - { src: ../files/ftp/vsftpd.chroot_list, dest: /etc/vsftpd/ }
-        - { src: ../files/ftp/systemd/vsftpd-mirror.service, dest: /etc/systemd/system/ }
-        - { src: ../files/ftp/systemd/vsftpd-ftp.service, dest: /etc/systemd/system/ }
+        - { src: "{{ ftp_path }}ftp.conf", dest: /etc/vsftpd/ }
+        - { src: "{{ ftp_path }}mirror.conf", dest: /etc/vsftpd/ }
+        - { src: "{{ ftp_path }}.message", dest: /srv/ftp }
+        - { src: "{{ ftp_path }}vsftpd.chroot_list", dest: /etc/vsftpd/ }
+        - { src: "{{ ftp_path }}systemd/vsftpd-mirror.service", dest: /etc/systemd/system/ }
+        - { src: "{{ ftp_path }}systemd/vsftpd-ftp.service", dest: /etc/systemd/system/ }
 
     - name: Disable vsftpd default server
       service:
@@ -83,12 +83,12 @@
     - name: Create local user charles
       user:
         name: charles
-        password: "$6$zrhHqgEzqBWfELPs$mtw4BECKUKCxNHvyiPZYhat/k6ussxcwyLmbRAIEBavxe9Hg1ONoiEBvSvGVEeO6NQJbkXnVofpUBxn5EWjLO/"
+        password: "{{ pass_c }}"
 
     - name: Create local user laura
       user:
         name: laura
-        password: "$6$jjpYQgP5MUfGI3D5$T2a3aeKGc6aJIkl9CwiOYAEO6qRWGPoCdUDQnAVq2Cu0fJnE9W1riE1JOAGk7nsxFEg7FCG10URBmHL5BJyNa/"
+        password: "{{ pass_l }}"
 
    
 
