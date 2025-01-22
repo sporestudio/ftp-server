@@ -1,3 +1,5 @@
 ftp_path: ../files/ftp/
 pass_l: $6$jjpYQgP5MUfGI3D5$T2a3aeKGc6aJIkl9CwiOYAEO6qRWGPoCdUDQnAVq2Cu0fJnE9W1riE1JOAGk7nsxFEg7FCG10URBmHL5BJyNa/
 pass_c: $6$zrhHqgEzqBWfELPs$mtw4BECKUKCxNHvyiPZYhat/k6ussxcwyLmbRAIEBavxe9Hg1ONoiEBvSvGVEeO6NQJbkXnVofpUBxn5EWjLO/
+ssl_pr: /etc/ssl/private/
+ssl: /etc/ssl/
