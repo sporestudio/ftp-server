@@ -110,7 +110,8 @@ This activity is best performed by a team of three experienced system administra
      ```
 
 3. User charles is chrooted, laura is not.
-    - We created this users with asnible too.
+
+    - We created this users with ansible too.
 
       ```yaml
           - name: Create local user charles
@@ -128,7 +129,7 @@ This activity is best performed by a team of three experienced system administra
 
 ### 3. Implementation of Encryption (SSL/TLS)
 
-1. Configure the SSL/TLS security layer on the FTP server:
+1. **Configure the SSL/TLS security layer on the FTP server**:
    - Generate SSL certificate and key:
 
     > We created it using ansible
@@ -170,11 +171,67 @@ This activity is best performed by a team of three experienced system administra
         allow_anon_ssl=YES
      ```
 
-2. Demonstrate encryption capability during data transfer.
+### 4. Testing the FTP server.
 
-    >maybe put a photo here about us log in the ftp
+The FTP server configuration is thoroughly tested using a Python script (tests/test-ftp.py). This script automates tests for both anonymous and local user access. The key aspects of the test suite include:
 
-### 4. Configuration of DNS Server
+1. Anonymous Access
+
+    - **Login**: Ensures anonymous login is successful.
+    - **Directory Listing**: Confirms the ability to list directories.
+    - **Upload Restrictions**: Verifies that anonymous users cannot upload files.
+
+2. Local User Access
+
+    - **Login**: Authenticates local users (e.g., charles and laura) with their credentials.
+    - **File Operations**: Tests file upload, download, and directory listing for local users.
+    - **Chroot Restrictions**: Verifies that:
+        - `charles` is restricted to their home directory (chrooted).
+        - `laura` can navigate outside their home directory (not chrooted).
+
+#### Run the test
+
+  To run the test we can use the following command:
+
+  ```bash
+  $ python3 tests/test-ftp.py
+  ```
+
+  <div align="center">
+    <img src="../.assets/imgs/test-ftp.png">
+  </div>
+
+#### Testing connecting FTP server via FTP client
+
+##### Anonymous server
+
+To connect to the anonymous server we made it with the **ftp cli client** from Linux.
+
+```bash
+$ ftp mirror.sri.ies
+```
+
+<div align="center">
+  <img src="../.assets/imgs/anon-login.png">
+</div>
+
+##### Local users server
+
+We can connect to the local users server via **Filezilla**.
+
+ - First we're going to see `laura` user connection:
+
+<div align="center">
+  <img src="../.assets/imgs/laura-login.png">
+</div>
+
+ - Now we login as `charles` users and see if it is jailed:
+
+<div align="center">
+  <img src="../.assets/imgs/charles-login.png">
+</div>
+
+### 5. Configuration of DNS Server
 
 1. Install a second virtual machine with a DNS server authoritative for the domain `sri.ies`:
 
@@ -239,28 +296,54 @@ This activity is best performed by a team of three experienced system administra
      ```
    - Create the zone file `/var/lib/bind/rev.sri.ies`:
 
-   ```bash
-        ;
-        ; Reverse configuration for the FTP-server
-        ; 
-        ;
-        $TTL    604800
-        $ORIGIN 57.168.192.in-addr.arpa.
+    ```bash
+          ;
+          ; Reverse configuration for the FTP-server
+          ; 
+          ;
+          $TTL    604800
+          $ORIGIN 57.168.192.in-addr.arpa.
 
-        @       IN      SOA     ns.sri.ies. root.sri.ies. (
-               3         ; Serial
-            604800         ; Refresh
-             86400         ; Retry
-             2419200         ; Expire
-            604800 )       ; Negative Cache TTL
+          @       IN      SOA     ns.sri.ies. root.sri.ies. (
+                3         ; Serial
+              604800         ; Refresh
+              86400         ; Retry
+              2419200         ; Expire
+              604800 )       ; Negative Cache TTL
 
-        @       IN      NS      ns.sri.ies.
-        10      IN      PTR     ns.sri.ies.
-        20      IN      PTR     mirror.sri.ies.
-        30      IN      PTR     ftp.sri.ies.
-   ```
+          @       IN      NS      ns.sri.ies.
+          10      IN      PTR     ns.sri.ies.
+          20      IN      PTR     mirror.sri.ies.
+          30      IN      PTR     ftp.sri.ies.
+    ```
 
 With this configuration we secure the DNS server.
+
+### 6. Testing the DNS server.
+
+We have a test made in bash so we can use the following command to check if the DNS Server is resolving all the address:
+
+```bash
+$ chmod +x tests/test-dns.sh
+$ tests/test-dns.sh 192.168.57.10
+```
+
+<div align="center">
+  <img src="../.assets/imgs/test-dns.png">
+</div>
+
+## The Importance of Encryption in Secure File Transfer
+
+Encryption is critical in secure file transfer to protect sensitive data from being intercepted or tampered with during transmission. Here’s why it’s important:
+
+  - **Data Confidentiality**: Ensures that only authorized users can read the transmitted data by encrypting the content.
+  - **Data Integrity**: Prevents unauthorized modification of files during transfer.
+  - **Authentication**: Validates the identity of the server and the client to avoid impersonation attacks.
+
+In this project, SSL/TLS is enabled for the local user FTP server to secure file transfers:
+
+  - `ssl_enable=YES` ensures all communication between the client and server is encrypted.
+  - Certificates (rsa_cert_file and rsa_private_key_file) are used to establish a secure connection.
 
 ## Conclusion
 
