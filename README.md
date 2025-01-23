@@ -19,7 +19,7 @@ This project configures a secure and functional FTP server using vsftpd on Linux
 
 ## Documentation
 
-To see documentation of the project you can [click here](https://github.com/sporestudio/ftp-server/blob/main/docs/GUIDE.md) or see the docs/ directory.
+To see documentation of the project you can [click here](https://github.com/sporestudio/ftp-server/blob/main/docs/DOCS.md) or see the docs/ directory.
 
 ## Installation
 
