@@ -17,6 +17,10 @@ This project configures a secure and functional FTP server using vsftpd on Linux
 - Vagrant 2.4.3 or latest
 - FTP Client like `Filezilla` or `lftp`
 
+## Documentation
+
+To see documentation of the project you can [click here](https://github.com/sporestudio/ftp-server/blob/main/docs/GUIDE.md) or see the docs/ directory.
+
 ## Installation
 
 > [!NOTE]
@@ -61,6 +65,12 @@ $ python3 tests/test-ftp.py
 ```
 
 ## Contributions
+
+Want to contribute? There are multiple ways you can contribute to this project. Here are some ideas:
+
+* [Translate the web into multiple languages!](./CONTRIBUTING.md#translations)
+* [Fix some easy issues](CONTRIBUTING.md#Reporting-Issues)
+* [Or check out some other issues](CONTRIBUTING.md#Reporting-Issues) (or translate them).
 
 ## License
 
