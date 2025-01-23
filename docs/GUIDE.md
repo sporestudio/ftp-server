@@ -24,11 +24,11 @@ This project involves the deployment and configuration of DNS (bind9) and FTP (v
 1. Virtual machines with compatible operating systems.
 2. FTP server software (vsftpd) and FTP clients (FileZilla).
 3. Encryption tools (SSL/TLS included in Debian).
-4. Documentation and reference manuals on FTP server configuration and security measures (available in this repository).
+4. Documentation and reference manuals on FTP server configuration and security measures.
 
 ## Team Composition
 
-This activity is best performed by a team of three experienced system administrators.
+This activity is best performed by a team of three system administrators.
 - Jorge Rodríguez Castillo
 - Juan Diego Mamani Huanaco
 - Miguel Ángel Pérez Menor
@@ -38,12 +38,15 @@ This activity is best performed by a team of three experienced system administra
 ### 1. Configuration of the Anonymous FTP Server
 
 1. Install FTP server software on the assigned machine:
-    ```bash
-   sudo apt-get update
-   sudo apt-get install vsftpd
+    ```plaintext
+    - name: Install FTP package
+      ansible.builtin.package:
+        update_cache: yes
+        name: vsftpd
     ```
+    This was done in the [ftp.yml](/ansible/ftp.yml)
 2. Configure the FTP server to allow anonymous connections:
-   - Copy the file /etc/vsftpd.conf for the mirror server.
+   - Copy the file `/etc/vsftpd.conf` for the mirror server.
    - Edit `/etc/mirror.conf` and set:
      ```plaintext
         # config/vsftpd/mirror.conf
@@ -64,20 +67,14 @@ This activity is best performed by a team of three experienced system administra
           connect_from_port_20=YES
           secure_chroot_dir=/var/run/vsftpd/empty
           pam_service_name=vsftpd
-
-        # ssl configuration
-          rsa_cert_file=/etc/ssl/certs/ssl-cert-pub.pem
-          rsa_private_key_file=/etc/ssl/private/ssl-cert-priv.key
-          ssl_enable=YES
-          allow_anon_ssl=YES
      ```
   > With this configuration we secure that the anonymous users have no write permissions and can enter  without using a password.
 
-### 2. Configuration of the FTP Server with Local Users
+### 2. Configuration of the FTP Server for Local Users
 
-1. Install FTP server software on a the same machine with a second network adapter.
+1. On the same machine with a second network adapter, we create the local server.
 2. Configure the FTP server to authenticate users using OS accounts:
-   - We copy the same file but this time for the local users of the FTP-server
+   - We copy `/etc/vsftpd` file but this time for the local users of the FTP-server
    - Edit `/etc/ftp.conf` and set:
      ```plaintext
         # config/vsftpd/ftp.conf
@@ -101,10 +98,9 @@ This activity is best performed by a team of three experienced system administra
           chroot_list_enable=YES
           chroot_list_file=/etc/vsftpd/vsftpd.chroot_list
           allow_writeable_chroot=YES
-
      ```
 3. User charles is chrooted, laura is not.
-    - We created this users with asnible too.
+    - We created this users with ansible too.
       ```plaintext
           - name: Create local user charles
             user:
@@ -118,6 +114,62 @@ This activity is best performed by a team of three experienced system administra
       ```
 
 > All of this configured in the ftp.conf.
+
+### 3. Configuration of the FTP Server for multi-user target.
+  1. Create the systemd files for FTP Server
+   - Create the `vsftpd-mirror.service`, set:
+     ```plaintext
+        [Unit]
+        Description=Service for Anonymous FTP server
+        After=network.target
+
+        [Service]
+        ExecStart=/usr/sbin/vsftpd /etc/vsftpd/mirror.conf
+        ExecReload=/bin/kill -HUP $MAINPID
+        ExecStartPre=/bin/mkdir -p /var/run/vsftpd/empty
+        KillSignal=SIGTERM
+        Restart=on-failure
+        Type=simple
+
+        [Install]
+        WantedBy=multi-user.target
+     ```
+   - Create the `vsftpd-ftp.service`, set:
+   ```plaintext
+      [Unit]
+      Description=Service for Local Users FTP server
+      After=network.target
+
+      [Service]
+      ExecStart=/usr/sbin/vsftpd /etc/vsftpd/ftp.conf
+      ExecReload=/bin/kill -HUP $MAINPID
+      ExecStartPre=/bin/mkdir -p /var/run/vsftpd/empty
+      KillSignal=SIGTERM
+      Restart=on-failure
+      Type=simple
+
+      [Install]
+      WantedBy=multi-user.target
+   ```
+  2. Copy the files.
+  - copy the files using ansible using this command:
+  ```plaintext
+      - name: Copy configuration files 
+      ansible.builtin.copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: root
+        group: root
+      loop:
+        - { src: "{{ ftp_path }}ftp.conf", dest: /etc/vsftpd/ }
+        - { src: "{{ ftp_path }}mirror.conf", dest: /etc/vsftpd/ }
+        - { src: "{{ ftp_path }}.message", dest: /srv/ftp }
+        - { src: "{{ ftp_path }}vsftpd.chroot_list", dest: /etc/vsftpd/ }
+        - { src: "{{ ftp_path }}systemd/vsftpd-mirror.service", dest: /etc/systemd/system/ }
+        - { src: "{{ ftp_path }}systemd/vsftpd-ftp.service", dest: /etc/systemd/system/ }
+  ```
+
+  > All of this is set inside [ftp.yml](/ansible/ftp.yml)
 
 ### 3. Implementation of Encryption (SSL/TLS)
 
@@ -150,7 +202,7 @@ This activity is best performed by a team of three experienced system administra
                 csr_path: /etc/ssl/private/ssl-sign.csr
                 provider: selfsigned
      ```
-  - Edit `ftp.conf` and `mirror.conf`set:
+  - Edit `ftp.conf` and `mirror.conf`, set:
      ```plaintext
         # ssl configuration
         rsa_cert_file=/etc/ssl/certs/ssl-cert-pub.pem
@@ -159,16 +211,34 @@ This activity is best performed by a team of three experienced system administra
         allow_anon_ssl=YES
      ```
 2. Demonstrate encryption capability during data transfer.
-    >maybe put a photo here about us log in the ftp
+    1. Testing mirror server.
+    - Connecting mirror server
+    ![image_putting_mirror_server](/docs/images/putting_ftp_server.png)
+    - SSL certificate appears.
+    ![watching_ssl_certificate](/docs/images/testing_ssl.png)
+    - Connected in the mirror server.
+    ![connected](/docs/images/connecting_mirror_server.png)
+    2. Testing local server.
+    - Connecting local server.
+    ![local_server_connection](/docs/images/connecting_local_server.png)
+    - SSL certificate appears.
+    ![ssl_local_server](/docs/images/ssl_local_server.png)
+    - Connected as laura in the local server.
+    ![connected_laura](/docs/images/connected_laura.png)
+    - Connected as charles in the local server.
+    ![connected_charles](/docs/images/conected_charles.png)
 
 ### 4. Configuration of DNS Server
 
 1. Install a second virtual machine with a DNS server authoritative for the domain `sri.ies`:
    - Install BIND9:
-     ```bash
-     sudo apt-get update
-     sudo apt-get install bind9
+     ```plaintext
+      - name: Install Bind9
+        ansible.builtin.package:
+          update_cache: yes
+          name: bind9
      ```
+  > This is in [ns.yml](/ansible/ns.yml)
    - Configure `named.conf.local` to define zones:
      ```plaintext
         zone "sri.ies" {
@@ -186,15 +256,15 @@ This activity is best performed by a team of three experienced system administra
    - Configure the `named.conf.options`.
     ``` plaintext
         options {
-	              directory "/var/cache/bind";
+                directory "/var/cache/bind";
 
-	              forwarders {
-		                    1.1.1.1;
-	              };
+                forwarders {
+                        1.1.1.1;
+                };
 
-	              dnssec-validation yes;
-	              listen-on { any; };
-	              listen-on-v6 { any; };
+                dnssec-validation yes;
+                listen-on { any; };
+                listen-on-v6 { any; };
         };
     ```
    - Create the zone file `/var/lib/bind/db.sri.ies`:
@@ -239,7 +309,11 @@ This activity is best performed by a team of three experienced system administra
         20      IN      PTR     mirror.sri.ies.
         30      IN      PTR     ftp.sri.ies.
    ```
-With this configuration we secure the DNS server 
+With this configuration we secure the DNS server is working.
+You can try it by using the [test-dns.sh](/tests/test-dns.sh)
+
+![dns_result](/docs/images/result_dns_test.png)
+>this is the result you should expect.
 
 ## Conclusion
 
