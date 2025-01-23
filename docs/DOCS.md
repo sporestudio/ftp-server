@@ -2,14 +2,16 @@
 
 ## Overview
 
-This project involves the deployment and configuration of DNS (bind9) and FTP (vsftpd) servers using Vagrant and Ansible. The main objective is to provide hands-on experience in configuring FTP servers, addressing two scenarios: anonymous access and local user authentication, and implementing security measures through encryption. Additionally, a DNS server is configured to manage the domain `sri.ies`.
+This project involves the **deployment and configuration of DNS (bind9) and FTP (vsftpd) servers using Vagrant and Ansible**. 
+
+The main objective is to provide hands-on experience in configuring FTP servers, addressing two scenarios: anonymous access and local user authentication, and implementing security measures through encryption. Additionally, a DNS server is configured to manage the domain `sri.ies`.
 
 ## Objectives
 
-1. Acquire practical skills in configuring FTP servers.
-2. Address two scenarios: anonymous access and local user authentication.
-3. Implement security measures through encryption.
-4. Configure a DNS server to manage FTP server domains.
+1. **Acquire practical skills in configuring FTP servers**.
+2. **Address two scenarios: anonymous access and local user authentication**.
+3. **Implement security measures through encryption**.
+4. **Configure a DNS server to manage FTP server domains**.
 
 ## Requirements
 
@@ -28,7 +30,7 @@ This project involves the deployment and configuration of DNS (bind9) and FTP (v
 
 ## Team Composition
 
-This activity is best performed by a team of three experienced system administrators.
+This activity is best performed by a team of three experienced system administrators:
 - Jorge Rodríguez Castillo
 - Juan Diego Mamani Huanaco
 - Miguel Ángel Pérez Menor
@@ -45,7 +47,8 @@ This activity is best performed by a team of three experienced system administra
 2. Configure the FTP server to allow anonymous connections:
    - Copy the file /etc/vsftpd.conf for the mirror server.
    - Edit `/etc/mirror.conf` and set:
-     ```plaintext
+
+     ```bash
         # config/vsftpd/mirror.conf
 
         # Anonymous FTP server configuration
@@ -71,6 +74,7 @@ This activity is best performed by a team of three experienced system administra
           ssl_enable=YES
           allow_anon_ssl=YES
      ```
+
   > With this configuration we secure that the anonymous users have no write permissions and can enter  without using a password.
 
 ### 2. Configuration of the FTP Server with Local Users
@@ -79,7 +83,8 @@ This activity is best performed by a team of three experienced system administra
 2. Configure the FTP server to authenticate users using OS accounts:
    - We copy the same file but this time for the local users of the FTP-server
    - Edit `/etc/ftp.conf` and set:
-     ```plaintext
+
+     ```bash
         # config/vsftpd/ftp.conf
 
         # Anonymous FTP server configuration
@@ -103,9 +108,11 @@ This activity is best performed by a team of three experienced system administra
           allow_writeable_chroot=YES
 
      ```
+
 3. User charles is chrooted, laura is not.
     - We created this users with asnible too.
-      ```plaintext
+
+      ```yaml
           - name: Create local user charles
             user:
               name: charles
@@ -123,8 +130,10 @@ This activity is best performed by a team of three experienced system administra
 
 1. Configure the SSL/TLS security layer on the FTP server:
    - Generate SSL certificate and key:
+
     > We created it using ansible
-     ```bash
+
+     ```yaml
             - name: Install dependencies to obtain SSL certificate
               ansible.builtin.package:
                 update_cache: yes
@@ -150,27 +159,35 @@ This activity is best performed by a team of three experienced system administra
                 csr_path: /etc/ssl/private/ssl-sign.csr
                 provider: selfsigned
      ```
+
   - Edit `ftp.conf` and `mirror.conf`set:
-     ```plaintext
+
+     ```bash
         # ssl configuration
         rsa_cert_file=/etc/ssl/certs/ssl-cert-pub.pem
         rsa_private_key_file=/etc/ssl/private/ssl-cert-priv.key
         ssl_enable=YES
         allow_anon_ssl=YES
      ```
+
 2. Demonstrate encryption capability during data transfer.
+
     >maybe put a photo here about us log in the ftp
 
 ### 4. Configuration of DNS Server
 
 1. Install a second virtual machine with a DNS server authoritative for the domain `sri.ies`:
+
    - Install BIND9:
+
      ```bash
      sudo apt-get update
      sudo apt-get install bind9
      ```
+
    - Configure `named.conf.local` to define zones:
-     ```plaintext
+
+     ```bash
         zone "sri.ies" {
             type master;
             file "/var/lib/bind/db.sri.ies";
@@ -184,7 +201,8 @@ This activity is best performed by a team of three experienced system administra
         };
      ```
    - Configure the `named.conf.options`.
-    ``` plaintext
+
+     ```bash
         options {
 	              directory "/var/cache/bind";
 
@@ -196,9 +214,10 @@ This activity is best performed by a team of three experienced system administra
 	              listen-on { any; };
 	              listen-on-v6 { any; };
         };
-    ```
+     ```
    - Create the zone file `/var/lib/bind/db.sri.ies`:
-     ```plaintext
+
+     ```bash
           ;
           ; DNS configuration for the FTP-Server
           ; 
@@ -219,7 +238,8 @@ This activity is best performed by a team of three experienced system administra
           ftp     IN      A       192.168.57.30
      ```
    - Create the zone file `/var/lib/bind/rev.sri.ies`:
-   ```plaintext
+
+   ```bash
         ;
         ; Reverse configuration for the FTP-server
         ; 
@@ -239,7 +259,8 @@ This activity is best performed by a team of three experienced system administra
         20      IN      PTR     mirror.sri.ies.
         30      IN      PTR     ftp.sri.ies.
    ```
-With this configuration we secure the DNS server 
+
+With this configuration we secure the DNS server.
 
 ## Conclusion
 
