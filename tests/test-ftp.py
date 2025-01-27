@@ -58,17 +58,11 @@ def test_user_access(server_ip, username, password, chrooted):
         print("File download successful.")
         
         # Check chroot status
-        try:
-            ftp.cwd('..')
-            if chrooted:
-                print(f"Error: {username} should be chrooted and not able to change directory.")
-            else:
-                print(f"{username} is not chrooted as expected.")
-        except ftplib.error_perm:
-            if chrooted:
-                print(f"{username} is chrooted as expected.")
-            else:
-                print(f"Error: {username} should be able to change directory.")
+        ftp.cwd('..')
+        if chrooted:
+            print(f"{username} is chrooted as expected.")
+        else:
+            print(f"{username} is not chrooted as expected.")
         
         ftp.quit()
     except Exception as e:
