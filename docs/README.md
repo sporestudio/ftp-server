@@ -281,8 +281,8 @@ This project involves the deployment and configuration of DNS (bind9) and FTP (v
      ```
 
    - Configure the `named.conf.options`.
-
-    ```bash
+   
+      ```bash
         options {
                 directory "/var/cache/bind";
 
