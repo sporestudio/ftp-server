@@ -26,29 +26,25 @@ This project involves the deployment and configuration of DNS (bind9) and FTP (v
 3. Encryption tools (SSL/TLS included in Debian).
 4. Documentation and reference manuals on FTP server configuration and security measures.
 
-## Team Composition
-
-This activity is best performed by a team of three system administrators.
-- Jorge Rodríguez Castillo
-- Juan Diego Mamani Huanaco
-- Miguel Ángel Pérez Menor
-
 ## Steps to Follow
 
 ### 1. Configuration of the Anonymous FTP Server
 
 1. Install FTP server software on the assigned machine:
-    ```plaintext
+
+    ```yml
     - name: Install FTP package
       ansible.builtin.package:
         update_cache: yes
         name: vsftpd
     ```
     This was done in the [ftp.yml](/ansible/ftp.yml)
+
 2. Configure the FTP server to allow anonymous connections:
    - Copy the file `/etc/vsftpd.conf` for the mirror server.
    - Edit `/etc/mirror.conf` and set:
-     ```plaintext
+
+     ```bash
         # config/vsftpd/mirror.conf
 
         # Anonymous FTP server configuration
@@ -68,15 +64,18 @@ This activity is best performed by a team of three system administrators.
           secure_chroot_dir=/var/run/vsftpd/empty
           pam_service_name=vsftpd
      ```
+
   > With this configuration we secure that the anonymous users have no write permissions and can enter  without using a password.
 
 ### 2. Configuration of the FTP Server for Local Users
 
 1. On the same machine with a second network adapter, we create the local server.
+
 2. Configure the FTP server to authenticate users using OS accounts:
    - We copy `/etc/vsftpd` file but this time for the local users of the FTP-server
    - Edit `/etc/ftp.conf` and set:
-     ```plaintext
+
+     ```bash
         # config/vsftpd/ftp.conf
 
         # Anonymous FTP server configuration
@@ -99,9 +98,11 @@ This activity is best performed by a team of three system administrators.
           chroot_list_file=/etc/vsftpd/vsftpd.chroot_list
           allow_writeable_chroot=YES
      ```
+
 3. User charles is chrooted, laura is not.
     - We created this users with ansible too.
-      ```plaintext
+
+      ```yml
           - name: Create local user charles
             user:
               name: charles
@@ -118,7 +119,8 @@ This activity is best performed by a team of three system administrators.
 ### 3. Configuration of the FTP Server for multi-user target.
   1. Create the systemd files for FTP Server
    - Create the `vsftpd-mirror.service`, set:
-     ```plaintext
+
+     ```bash
         [Unit]
         Description=Service for Anonymous FTP server
         After=network.target
@@ -135,7 +137,8 @@ This activity is best performed by a team of three system administrators.
         WantedBy=multi-user.target
      ```
    - Create the `vsftpd-ftp.service`, set:
-   ```plaintext
+
+   ```bash
       [Unit]
       Description=Service for Local Users FTP server
       After=network.target
@@ -152,8 +155,10 @@ This activity is best performed by a team of three system administrators.
       WantedBy=multi-user.target
    ```
   2. Copy the files.
+
   - copy the files using ansible using this command:
-  ```plaintext
+
+  ```yml
       - name: Copy configuration files 
       ansible.builtin.copy:
         src: "{{ item.src }}"
@@ -175,8 +180,9 @@ This activity is best performed by a team of three system administrators.
 
 1. Configure the SSL/TLS security layer on the FTP server:
    - Generate SSL certificate and key:
+
     > We created it using ansible
-     ```bash
+     ```yml
             - name: Install dependencies to obtain SSL certificate
               ansible.builtin.package:
                 update_cache: yes
@@ -203,44 +209,64 @@ This activity is best performed by a team of three system administrators.
                 provider: selfsigned
      ```
   - Edit `ftp.conf` and `mirror.conf`, set:
-     ```plaintext
+
+     ```bash
         # ssl configuration
         rsa_cert_file=/etc/ssl/certs/ssl-cert-pub.pem
         rsa_private_key_file=/etc/ssl/private/ssl-cert-priv.key
         ssl_enable=YES
         allow_anon_ssl=YES
      ```
+
 2. Demonstrate encryption capability during data transfer.
     1. Testing mirror server.
     - Connecting mirror server
+
     ![image_putting_mirror_server](/docs/images/putting_ftp_server.png)
+
     - SSL certificate appears.
+
     ![watching_ssl_certificate](/docs/images/testing_ssl.png)
+
     - Connected in the mirror server.
+
     ![connected](/docs/images/connecting_mirror_server.png)
+
     2. Testing local server.
+
     - Connecting local server.
+
     ![local_server_connection](/docs/images/connecting_local_server.png)
+
     - SSL certificate appears.
+
     ![ssl_local_server](/docs/images/ssl_local_server.png)
+
     - Connected as laura in the local server.
+
     ![connected_laura](/docs/images/connected_laura.png)
+
     - Connected as charles in the local server.
+
     ![connected_charles](/docs/images/conected_charles.png)
 
 ### 4. Configuration of DNS Server
 
 1. Install a second virtual machine with a DNS server authoritative for the domain `sri.ies`:
+
    - Install BIND9:
-     ```plaintext
+
+     ```yml
       - name: Install Bind9
         ansible.builtin.package:
           update_cache: yes
           name: bind9
      ```
   > This is in [ns.yml](/ansible/ns.yml)
+
    - Configure `named.conf.local` to define zones:
-     ```plaintext
+
+     ```bash
         zone "sri.ies" {
             type master;
             file "/var/lib/bind/db.sri.ies";
@@ -253,8 +279,10 @@ This activity is best performed by a team of three system administrators.
             allow-transfer { 192.168.57.10; };
         };
      ```
+
    - Configure the `named.conf.options`.
-    ``` plaintext
+
+    ```bash
         options {
                 directory "/var/cache/bind";
 
@@ -267,8 +295,10 @@ This activity is best performed by a team of three system administrators.
                 listen-on-v6 { any; };
         };
     ```
+
    - Create the zone file `/var/lib/bind/db.sri.ies`:
-     ```plaintext
+
+     ```bash
           ;
           ; DNS configuration for the FTP-Server
           ; 
@@ -288,8 +318,10 @@ This activity is best performed by a team of three system administrators.
           mirror  IN      A       192.168.57.20
           ftp     IN      A       192.168.57.30
      ```
+
    - Create the zone file `/var/lib/bind/rev.sri.ies`:
-   ```plaintext
+
+   ```bash
         ;
         ; Reverse configuration for the FTP-server
         ; 
@@ -309,6 +341,7 @@ This activity is best performed by a team of three system administrators.
         20      IN      PTR     mirror.sri.ies.
         30      IN      PTR     ftp.sri.ies.
    ```
+
 With this configuration we secure the DNS server is working.
 You can try it by using the [test-dns.sh](/tests/test-dns.sh)
 
@@ -327,4 +360,4 @@ This project provides hands-on experience in configuring and securing FTP server
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the GNU General Public License - see the [LICENSE](LICENSE) file for details.
