@@ -62,6 +62,5 @@ If you're ready to contribute code:
 ## Additional Resources
 
 - [GitHub Documentation](https://docs.github.com/)
-- [Project Wiki](https://github.com/sporestudio/ftp-server/wiki)
 
 Thank you for contributing!
