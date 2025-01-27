@@ -9,7 +9,7 @@ First off, thank you for considering contributing to our FTP Server project! You
   - [Reporting Bugs](#reporting-bugs)
   - [Suggesting Enhancements](#suggesting-enhancements)
   - [Submitting Pull Requests](#submitting-pull-requests)
-- [Translations](#translations)
+- [Translations](#Translations)
 - [Style Guides](#style-guides)
   - [Coding Standards](#coding-standards)
   - [Commit Messages](#commit-messages)
@@ -47,7 +47,7 @@ If you're ready to contribute code:
 6. **Push to Your Fork**: Use `git push origin feature/YourFeatureName`.
 7. **Open a Pull Request**: Navigate to the original repository and click "New Pull Request." Provide a clear description of your changes.
 
-## translations
+## Translations
 
 We aim to make this project accessible to a global audience. If you would like to translate this repository into another language, here's how you can help:
 
