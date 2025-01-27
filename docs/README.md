@@ -118,6 +118,7 @@ This project involves the deployment and configuration of DNS (bind9) and FTP (v
 
 ### 3. Configuration of the FTP Server for multi-user target.
   1. Create the systemd files for FTP Server
+
    - Create the `vsftpd-mirror.service`, set:
 
      ```bash
@@ -136,6 +137,7 @@ This project involves the deployment and configuration of DNS (bind9) and FTP (v
         [Install]
         WantedBy=multi-user.target
      ```
+
    - Create the `vsftpd-ftp.service`, set:
 
    ```bash
@@ -154,6 +156,7 @@ This project involves the deployment and configuration of DNS (bind9) and FTP (v
       [Install]
       WantedBy=multi-user.target
    ```
+
   2. Copy the files.
 
   - copy the files using ansible using this command:
@@ -178,10 +181,12 @@ This project involves the deployment and configuration of DNS (bind9) and FTP (v
 
 ### 3. Implementation of Encryption (SSL/TLS)
 
-1. Configure the SSL/TLS security layer on the FTP server:
+1. **Configure the SSL/TLS security layer on the FTP server**:
+
    - Generate SSL certificate and key:
 
     > We created it using ansible
+
      ```yml
             - name: Install dependencies to obtain SSL certificate
               ansible.builtin.package:
@@ -208,6 +213,7 @@ This project involves the deployment and configuration of DNS (bind9) and FTP (v
                 csr_path: /etc/ssl/private/ssl-sign.csr
                 provider: selfsigned
      ```
+
   - Edit `ftp.conf` and `mirror.conf`, set:
 
      ```bash
@@ -218,37 +224,50 @@ This project involves the deployment and configuration of DNS (bind9) and FTP (v
         allow_anon_ssl=YES
      ```
 
-2. Demonstrate encryption capability during data transfer.
-    1. Testing mirror server.
+  #### Testing FTP server via Filezilla
+
+    :snowflake: Testing mirror server.
+
     - Connecting mirror server
 
-    ![image_putting_mirror_server](/docs/images/putting_ftp_server.png)
+    ![image_putting_mirror_server](/docs/imgs/putting_ftp_server.png)
 
     - SSL certificate appears.
 
-    ![watching_ssl_certificate](/docs/images/testing_ssl.png)
+    ![watching_ssl_certificate](/docs/imgs/testing_ssl.png)
 
     - Connected in the mirror server.
 
-    ![connected](/docs/images/connecting_mirror_server.png)
+    ![connected](/docs/imgs/connecting_mirror_server.png)
 
     2. Testing local server.
 
     - Connecting local server.
 
-    ![local_server_connection](/docs/images/connecting_local_server.png)
+    ![local_server_connection](/docs/imgs/connecting_local_server.png)
 
     - SSL certificate appears.
 
-    ![ssl_local_server](/docs/images/ssl_local_server.png)
+    ![ssl_local_server](/docs/imgs/ssl_local_server.png)
 
     - Connected as laura in the local server.
 
-    ![connected_laura](/docs/images/connected_laura.png)
+    ![connected_laura](/docs/imgs/connected_laura.png)
 
     - Connected as charles in the local server.
 
-    ![connected_charles](/docs/images/conected_charles.png)
+    ![connected_charles](/docs/imgs/conected_charles.png)
+
+
+  #### Testing FTP sever via python test
+
+  We can automate this test with a Python script in `tests/` directory running the following command:
+
+   ```bash
+   $ python3 tests/test-ftp.py
+   ```
+
+  ![ftp_test](/docs/imgs/test-ftp.png)
 
 ### 4. Configuration of DNS Server
 
@@ -321,31 +340,35 @@ This project involves the deployment and configuration of DNS (bind9) and FTP (v
 
    - Create the zone file `/var/lib/bind/rev.sri.ies`:
 
-   ```bash
-        ;
-        ; Reverse configuration for the FTP-server
-        ; 
-        ;
-        $TTL    604800
-        $ORIGIN 57.168.192.in-addr.arpa.
+    ```bash
+      ;
+      ; Reverse configuration for the FTP-server
+      ; 
+      ;
+      $TTL    604800
+      $ORIGIN 57.168.192.in-addr.arpa.
 
-        @       IN      SOA     ns.sri.ies. root.sri.ies. (
-               3         ; Serial
-            604800         ; Refresh
-             86400         ; Retry
-             2419200         ; Expire
-            604800 )       ; Negative Cache TTL
+      @       IN      SOA     ns.sri.ies. root.sri.ies. (
+            3         ; Serial
+          604800         ; Refresh
+          86400         ; Retry
+          2419200         ; Expire
+          604800 )       ; Negative Cache TTL
 
-        @       IN      NS      ns.sri.ies.
-        10      IN      PTR     ns.sri.ies.
-        20      IN      PTR     mirror.sri.ies.
-        30      IN      PTR     ftp.sri.ies.
-   ```
+      @       IN      NS      ns.sri.ies.
+      10      IN      PTR     ns.sri.ies.
+      20      IN      PTR     mirror.sri.ies.
+      30      IN      PTR     ftp.sri.ies.
+    ```
 
 With this configuration we secure the DNS server is working.
+
+#### Testing DNS server
+
 You can try it by using the [test-dns.sh](/tests/test-dns.sh)
 
-![dns_result](/docs/images/result_dns_test.png)
+![dns_result](/docs/imgs/test-dns.png)
+
 >this is the result you should expect.
 
 ## Conclusion
