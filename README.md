@@ -74,7 +74,7 @@ Want to contribute? There are multiple ways you can contribute to this project. 
 
 ## License
 
-This project is under [GNU General Public License]()
+This project is under [GNU General Public License](./LICENSE)
 
 ## Authors
 
