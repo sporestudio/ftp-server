@@ -281,7 +281,7 @@ This project involves the deployment and configuration of DNS (bind9) and FTP (v
      ```
 
    - Configure the `named.conf.options`.
-   
+
       ```bash
         options {
                 directory "/var/cache/bind";
@@ -294,7 +294,7 @@ This project involves the deployment and configuration of DNS (bind9) and FTP (v
                 listen-on { any; };
                 listen-on-v6 { any; };
         };
-    ```
+      ```
 
    - Create the zone file `/var/lib/bind/db.sri.ies`:
 
