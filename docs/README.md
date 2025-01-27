@@ -226,7 +226,7 @@ This project involves the deployment and configuration of DNS (bind9) and FTP (v
 
   #### Testing FTP server via Filezilla
 
-    :snowflake: Testing mirror server.
+    1. Testing mirror server.
 
     - Connecting mirror server
 
@@ -318,30 +318,29 @@ This project involves the deployment and configuration of DNS (bind9) and FTP (v
    - Create the zone file `/var/lib/bind/db.sri.ies`:
 
      ```bash
-          ;
-          ; DNS configuration for the FTP-Server
-          ; 
-          ;
-          $TTL    604800
-          $ORIGIN sri.ies.
+      ;
+      ; DNS configuration for the FTP-Server
+      ; 
+      ;
+      $TTL    604800
+      $ORIGIN sri.ies.
 
-          @       IN      SOA     ns.sri.ies. root.sri.ies. (
-                           3         ; Serial
-                      604800         ; Refresh
-                       86400         ; Retry
-                     2419200         ; Expire
-                      604800 )       ; Negative Cache TTL
+      @       IN      SOA     ns.sri.ies. root.sri.ies. (
+                        3         ; Serial
+                  604800         ; Refresh
+                    86400         ; Retry
+                  2419200         ; Expire
+                  604800 )       ; Negative Cache TTL
 
-          @       IN      NS      ns.sri.ies.
-          ns      IN      A       192.168.57.10
-          mirror  IN      A       192.168.57.20
-          ftp     IN      A       192.168.57.30
+      @       IN      NS      ns.sri.ies.
+      ns      IN      A       192.168.57.10
+      mirror  IN      A       192.168.57.20
+      ftp     IN      A       192.168.57.30
      ```
 
    - Create the zone file `/var/lib/bind/rev.sri.ies`:
 
-    ```bash
-      ;
+      ```bash
       ; Reverse configuration for the FTP-server
       ; 
       ;
@@ -359,7 +358,7 @@ This project involves the deployment and configuration of DNS (bind9) and FTP (v
       10      IN      PTR     ns.sri.ies.
       20      IN      PTR     mirror.sri.ies.
       30      IN      PTR     ftp.sri.ies.
-    ```
+      ```
 
 With this configuration we secure the DNS server is working.
 
