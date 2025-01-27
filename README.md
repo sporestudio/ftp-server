@@ -68,9 +68,9 @@ $ python3 tests/test-ftp.py
 
 Want to contribute? There are multiple ways you can contribute to this project. Here are some ideas:
 
-* [Translate the web into multiple languages!](./CONTRIBUTING.md#translations)
-* [Fix some easy issues](CONTRIBUTING.md#Reporting-Issues)
-* [Or check out some other issues](CONTRIBUTING.md#Reporting-Issues) (or translate them).
+* [Translate the web into multiple languages!](/docs/CONTRIBUTING.md#translations)
+* [Fix some easy issues](/docs/CONTRIBUTING.md#Reporting-Issues)
+* [Or check out some other issues](/docs/CONTRIBUTING.md#Reporting-Issues) (or translate them).
 
 ## License
 
