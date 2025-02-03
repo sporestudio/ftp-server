@@ -61,7 +61,7 @@ The infrestructure was built with [Vagrant](https://www.vagrantup.com/), which u
   ```
 > *DNS Server machine. Extract from [Vagrantfile](../Vagrantfile)*
 
-## Steps to Follow
+## FTP Server Configuration
 
 ### 1. Configuration of the Anonymous FTP Server
 
@@ -274,6 +274,8 @@ In this project, SSL/TLS is enabled for the local user FTP server to secure file
         allow_anon_ssl=YES
      ```
 
+  ### 4. Testing the FTP Server
+
   #### Testing FTP server via Filezilla
 
   **1. Testing mirror server**
@@ -319,9 +321,11 @@ In this project, SSL/TLS is enabled for the local user FTP server to secure file
 
   ![ftp_test](/docs/imgs/ftp-test.png)
 
-### 4. Configuration of DNS Server
+## DNS Server Configuration
 
-1. Install a second virtual machine with a DNS server authoritative for the domain `sri.ies`:
+### 1. Install Bind9 package
+
+  Install a second virtual machine with a DNS server authoritative for the domain `sri.ies`:
 
    - Install BIND9:
 
@@ -332,6 +336,8 @@ In this project, SSL/TLS is enabled for the local user FTP server to secure file
           name: bind9
      ```
   > *This is in [ns.yml](/ansible/ns.yml)*
+
+### 2. Configure the named.conf files
 
    - Configure `named.conf.local` to define zones:
 
@@ -364,6 +370,8 @@ In this project, SSL/TLS is enabled for the local user FTP server to secure file
                 listen-on-v6 { any; };
         };
       ```
+
+  ### 3. Configure the DNS zones
 
    - Create the zone file `/var/lib/bind/db.sri.ies`:
 
@@ -429,13 +437,52 @@ In this project, SSL/TLS is enabled for the local user FTP server to secure file
 
 With this configuration we secure the DNS server is working.
 
-#### Testing DNS server
+### 4. Testing DNS server
 
 You can try it by using the [test-dns.sh](/tests/test-dns.sh)
 
 ![dns_result](/docs/imgs/test-dns.png)
 
 > *This is the result you should expect.*
+
+
+## Testing Ansible playbooks
+
+This project contains a **Continuous Integration** workflow made with **Github Actions** features to ensure the quality of the code and the correct syntax in the Ansible files.
+
+  - **Deploy yaml file was created to trigger the action when a commit is done**. How you can see the test are running in Ubuntu 24.04 and there is a job to install the necessary dependencies for run [Ansible Lint](https://ansible.readthedocs.io/projects/lint/) and another one to run it.
+
+    ```yml
+    name: ansible-lint
+    on:
+      push:
+        branches: ["main"]
+      workflow_dispatch:
+
+    jobs:
+      build:
+        name: Ansible Lint
+        runs-on: ubuntu-24.04
+        steps:
+          - name: Checkout repository
+            uses: actions/checkout@v4
+
+          - name: Install community.crypto from Ansible galaxy
+            run: |
+              python -m pip install --upgrade pip
+              pip install ansible ansible-lint
+              ansible-galaxy collection install community.crypto
+      
+          - name: Run ansible-lint
+            run: |
+              ansible-lint ansible/
+    ```
+
+  - When we do a `git push` command the test are triggered and passed.
+
+    <div align="center">
+      <img src=".imgs/ansible-lint-passed.png" alt="ansible-lint">
+    </div>
 
 ## Conclusion
 
