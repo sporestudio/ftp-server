@@ -4,7 +4,7 @@
   tasks:
     - name: Install Bind9
       ansible.builtin.package:
-        update_cache: yes
+        update_cache: true
         name: bind9
 
     - name: Copy DNS configuration files
@@ -12,7 +12,8 @@
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
         owner: bind
-        group: bind 
+        group: bind
+        mode: '0644'
       loop:
         - { src: "{{ dns_path }}named", dest: /etc/default/ }
         - { src: "{{ dns_path }}named.conf.options", dest: /etc/bind/ }
@@ -22,14 +23,16 @@
 
     - name: Copy resolv.conf
       ansible.builtin.copy:
-        src: ../files/resolv.conf
-        dest: /etc/
+        src: "{{ dns_path }}resolv.conf"
+        dest: /etc/resolv.conf
+        mode: '0644'
 
     - name: Validate bind9 config
-      command: named-checkconf
+      ansible.legacy.command: named-checkconf
+      changed_when: false
 
     - name: Restart bind9 service
-      systemd:
+      ansible.legacy.systemd:
         name: bind9
         enabled: true
         state: restarted
