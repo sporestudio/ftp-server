@@ -4,6 +4,6 @@ servers:
       ansible_host: 192.168.57.10
     ftp:
       ansible_host: 192.168.57.20
-      
+
   vars:
     ansible_user: vagrant
