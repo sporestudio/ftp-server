@@ -276,6 +276,34 @@ In this project, SSL/TLS is enabled for the local user FTP server to secure file
 
   ### 4. Testing the FTP Server
 
+  #### Testing FTP server via Terminal
+
+  **1. Install the package FTP in you client PC**
+
+  - Use this command to install the ftp package
+
+  ```bash
+    sudo apt install ftp -y
+  ```
+
+  - Write the following command to connect the mirror server
+
+  ```bash
+    ftp mirror.sri.ies
+  ```
+
+  - After executing the command this will appear :
+
+  <div align="center">
+    <img src=".imgs/mirror_terminal_connecting.png" alt="mirror_terminal_connecting">
+  </div>
+
+  - You will have to log in as `anonymous` and you will login succesfully.
+
+  <div align="center">
+    <img src=".imgs/login_succes_mirror_terminal.png" alt="login_succes_mirror_terminal">
+  </div>
+
   #### Testing FTP server via Filezilla
 
   **1. Testing mirror server**
