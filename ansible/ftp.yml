@@ -1,32 +1,32 @@
 - name: Configure FTP server.
   hosts: ftp
-  become: True
+  become: true
   tasks:
     - name: Install FTP package
       ansible.builtin.package:
-        update_cache: yes
+        update_cache: true
         name: vsftpd
 
     - name: Install dependencies to obtain SSL certificate
       ansible.builtin.package:
-        update_cache: yes
-        name: python3-cryptography 
+        update_cache: true
+        name: python3-cryptography
 
     - name: Create vsftpd config directory
-      file:
+      ansible.builtin.file:
         path: /etc/vsftpd
         state: directory
         owner: root
         group: ftp
-        mode: 0750
+        mode: '0750'
 
     - name: Generate SSL Private Key
-      openssl_privatekey:
+      community.crypto.openssl_privatekey:
         path: "{{ ssl_pr }}/ssl-cert-priv.key"
         size: 2048
 
     - name: Generate sign request (CSR)
-      openssl_csr:
+      community.crypto.openssl_csr:
         path: "{{ ssl_pr }}ssl-sign.csr"
         privatekey_path: "{{ ssl_pr }}ssl-cert-priv.key"
         common_name: "ssl-ftp-cert"
@@ -35,18 +35,19 @@
         email_address: "jrodcas899@ieszaidinvergeles.org"
 
     - name: Obtain SSL public key
-      openssl_certificate:
+      community.crypto.x509_certificate:
         path: "{{ ssl }}certs/ssl-cert-pub.pem"
         privatekey_path: "{{ ssl_pr }}ssl-cert-priv.key"
         csr_path: "{{ ssl_pr }}ssl-sign.csr"
         provider: selfsigned
 
-    - name: Copy configuration files 
+    - name: Copy configuration files
       ansible.builtin.copy:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
         owner: root
         group: root
+        mode: '0644'
       loop:
         - { src: "{{ ftp_path }}ftp.conf", dest: /etc/vsftpd/ }
         - { src: "{{ ftp_path }}mirror.conf", dest: /etc/vsftpd/ }
@@ -56,40 +57,36 @@
         - { src: "{{ ftp_path }}systemd/vsftpd-ftp.service", dest: /etc/systemd/system/ }
 
     - name: Disable vsftpd default server
-      service:
+      ansible.legacy.service:
         name: vsftpd
-        enabled: no
+        enabled: false
         state: stopped
 
     - name: Enable service for anonymous FTP server
-      service:
+      ansible.legacy.service:
         name: vsftpd-mirror
-        enabled: yes
+        enabled: true
         state: started
-        daemon_reload: yes
+        daemon_reload: true
 
     - name: Enable service for local users FTP server
-      service:
+      ansible.legacy.service:
         name: vsftpd-ftp
-        enabled: yes
+        enabled: true
         state: started
-        daemon_reload: yes
+        daemon_reload: true
 
     - name: Copy resolv.conf
-      copy:
+      ansible.legacy.copy:
         src: ../files/resolv.conf
         dest: /etc/resolv.conf
 
     - name: Create local user charles
-      user:
+      ansible.legacy.user:
         name: charles
         password: "{{ pass_c }}"
 
     - name: Create local user laura
-      user:
+      ansible.legacy.user:
         name: laura
         password: "{{ pass_l }}"
-
-   
-
-
