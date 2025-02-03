@@ -34,5 +34,5 @@
     - name: Restart bind9 service
       ansible.legacy.systemd:
         name: bind9
-        enabled: yes
+        enabled: true
         state: restarted
