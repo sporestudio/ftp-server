@@ -282,33 +282,47 @@ In this project, SSL/TLS is enabled for the local user FTP server to secure file
 
   - Connecting mirror server
 
-  ![image_putting_mirror_server](/docs/imgs/putting_ftp_server.png)
+  <div align="center">
+    <img src=".imgs/putting_ftp_server.png" alt="putting-ftp-server">
+  </div>
 
   - SSL certificate appears.
 
-  ![watching_ssl_certificate](/docs/imgs/testing_ssl.png)
+  <div align="center">
+    <img src=".imgs/testing_ssl.png" alt="testing-ssl">
+  </div>
 
   - Connected in the mirror server.
 
-  ![connected](/docs/imgs/connecting_mirror_server.png)
+  <div align="center">
+    <img src=".imgs/connecting_mirror_server.png" alt="anon-server-connect">
+  </div>
 
   **2. Testing local server**
 
   - Connecting local server.
 
-  ![local_server_connection](/docs/imgs/connecting_local_server.png)
+  <div align="center">
+    <img src=".imgs/connecting_local_server.png" alt="local-server-connect">
+  </div>
 
   - SSL certificate appears.
 
-  ![ssl_local_server](/docs/imgs/ssl_local_server.png)
+  <div align="center">
+    <img src=".imgs/ssl_local_server.png" alt="ssl-local-server">
+  </div>
 
   - Connected as laura in the local server.
 
-  ![connected_laura](/docs/imgs/connected_laura.png)
+  <div align="center">
+    <img src=".imgs/connected_laura.png" alt="connected-laura">
+  </div>
 
   - Connected as charles in the local server.
 
-  ![connected_charles](/docs/imgs/conected_charles.png)
+  <div align="center">
+    <img src=".imgs/conected_charles.png" alt="connected-charles">
+  </div>
 
 
   #### Testing FTP sever via python test
@@ -319,7 +333,9 @@ In this project, SSL/TLS is enabled for the local user FTP server to secure file
    $ python3 tests/test-ftp.py
    ```
 
-  ![ftp_test](/docs/imgs/ftp-test.png)
+  <div align="center">
+    <img src=".imgs/ftp-test.png" alt="ftp-test">
+  </div>
 
 ## DNS Server Configuration
 
@@ -441,7 +457,9 @@ With this configuration we secure the DNS server is working.
 
 You can try it by using the [test-dns.sh](/tests/test-dns.sh)
 
-![dns_result](/docs/imgs/test-dns.png)
+  <div align="center">
+    <img src=".imgs/test-dns.png" alt="test-dns">
+  </div>
 
 > *This is the result you should expect.*
 
