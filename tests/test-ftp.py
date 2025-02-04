@@ -77,8 +77,7 @@ def test_user_access(server_ip, username, password, chrooted):
 if __name__ == '__main__':
 
     try: 
-        # FTP Server vars
-        SERVER_IP = 'your.ftp.server.ip'
+        
         ANONYMOUS_SERVER_IP = '192.168.57.20'  # Anonymous user server
         LOCAL_USERS_SERVER_IP = '192.168.57.30'  # Local users server
 
