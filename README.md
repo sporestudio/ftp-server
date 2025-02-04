@@ -1,5 +1,9 @@
 # FTP Server and DNS Configuration using Vagrant + Ansible
 
+<div align="center">
+    <img src="docs/.imgs/ftp-diag.png" alt="diagram">
+</div>
+
 This project configures a secure and functional FTP server using vsftpd on Linux. The server supports anonymous and local users, with support for SSL/TLS encryption and `chroot` options for specific users.
 
 ## Features
