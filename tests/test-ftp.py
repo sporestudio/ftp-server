@@ -72,17 +72,24 @@ def test_user_access(server_ip, username, password, chrooted):
             os.remove('testfile.txt')
         if os.path.exists('downloaded_testfile.txt'):
             os.remove('downloaded_testfile.txt')
+            
 
-# Configuración del servidor FTP
-SERVER_IP = 'your.ftp.server.ip'
-ANONYMOUS_SERVER_IP = '192.168.57.20'  # IP del servidor FTP anónimo
-LOCAL_USERS_SERVER_IP = '192.168.57.30'  # IP del servidor FTP de usuarios locales
+if __name__ == '__main__':
 
-# Pruebas para acceso anónimo
-print("Testing anonymous FTP access...")
-test_anonymous_access(ANONYMOUS_SERVER_IP)
+    try: 
+        # FTP Server vars
+        SERVER_IP = 'your.ftp.server.ip'
+        ANONYMOUS_SERVER_IP = '192.168.57.20'  # Anonymous user server
+        LOCAL_USERS_SERVER_IP = '192.168.57.30'  # Local users server
 
-# Pruebas para acceso de usuarios locales
-print("Testing local user FTP access...")
-test_user_access(LOCAL_USERS_SERVER_IP, 'charles', '1234', chrooted=True)
-test_user_access(LOCAL_USERS_SERVER_IP, 'laura', '1234', chrooted=False)
+        # Try anonymous access
+        print("Testing anonymous FTP access...")
+        test_anonymous_access(ANONYMOUS_SERVER_IP)
+
+        # Try local users
+        print("Testing local user FTP access...")
+        test_user_access(LOCAL_USERS_SERVER_IP, 'charles', '1234', chrooted=True)
+        test_user_access(LOCAL_USERS_SERVER_IP, 'laura', '1234', chrooted=False)
+    
+    except Exception as e:
+        print(f'There was an error: {e}')
