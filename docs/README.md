@@ -483,7 +483,7 @@ With this configuration we secure the DNS server is working.
 
 ### 4. Testing DNS server
 
-You can try it by using the [test-dns.sh](/tests/test-dns.sh)
+You can try it by using the [test-dns.sh](/tests/test-dns.sh).
 
   <div align="center">
     <img src=".imgs/test-dns.png" alt="test-dns">
