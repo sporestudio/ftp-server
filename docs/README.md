@@ -43,7 +43,7 @@ The infrestructure was built with [Vagrant](https://www.vagrantup.com/), which u
     end
   end
   ```
-> *FTP Server machine. Extract from [Vagrantfile](../Vagrantfile)*
+> *FTP Server machine. Extract from [Vagrantfile](../Vagrantfile).*
 
 
 - This will be the machine for the **DNS Server**.
@@ -59,7 +59,7 @@ The infrestructure was built with [Vagrant](https://www.vagrantup.com/), which u
     end
   end
   ```
-> *DNS Server machine. Extract from [Vagrantfile](../Vagrantfile)*
+> *DNS Server machine. Extract from [Vagrantfile](../Vagrantfile).*
 
 ## FTP Server Configuration
 
@@ -73,7 +73,7 @@ The infrestructure was built with [Vagrant](https://www.vagrantup.com/), which u
         update_cache: yes
         name: vsftpd
     ```
-    > *This was done in the [ftp.yml](/ansible/ftp.yml)*
+    > *This was done in the [ftp.yml](/ansible/ftp.yml).*
 
 2. Configure the FTP server to allow anonymous connections:
    - Copy the file `/etc/vsftpd.conf` for the mirror server.
@@ -100,7 +100,7 @@ The infrestructure was built with [Vagrant](https://www.vagrantup.com/), which u
         pam_service_name=vsftpd
      ```
 
-  > *With this configuration we secure that the anonymous users have no write permissions and can enter  without using a password.*
+  > *With this configuration we secure that the anonymous users have no write permissions and can enter without using a password.*
 
 ### 2. Configuration of the FTP Server for Local Users
 
@@ -150,7 +150,7 @@ The infrestructure was built with [Vagrant](https://www.vagrantup.com/), which u
           password: "$6$jjpYQgP5MUfGI3D5$T2a3aeKGc6aJIkl9CwiOYAEO6qRWGPoCdUDQnAVq2Cu0fJnE9W1riE1JOAGk7nsxFEg7FCG10URBmHL5BJyNa/"
       ```
 
-> *All of this configured in the ftp.conf.*
+> *All of this configured in the [ftp.conf](files/ftp/ftp.conf).*
 
 ### 3. Configuration of the FTP Server for multi-user target
 
@@ -214,7 +214,7 @@ The infrestructure was built with [Vagrant](https://www.vagrantup.com/), which u
       - { src: "{{ ftp_path }}systemd/vsftpd-ftp.service", dest: /etc/systemd/system/ }
     ```
 
-  > *All of this is set inside [ftp.yml](/ansible/ftp.yml)*
+  > *All of this is set inside [ftp.yml](/ansible/ftp.yml).*
 
 ### 3. The Importance of Encryption in Secure File Transfer
 
@@ -283,13 +283,13 @@ In this project, SSL/TLS is enabled for the local user FTP server to secure file
   - Use this command to install the ftp package
 
   ```bash
-    sudo apt install ftp -y
+  $ sudo apt install ftp -y
   ```
 
   - Write the following command to connect the mirror server
 
   ```bash
-    ftp mirror.sri.ies
+  $ ftp mirror.sri.ies
   ```
 
   - After executing the command this will appear :
@@ -379,7 +379,7 @@ In this project, SSL/TLS is enabled for the local user FTP server to secure file
           update_cache: yes
           name: bind9
      ```
-  > *This is in [ns.yml](/ansible/ns.yml)*
+  > *This is in [ns.yml](/ansible/ns.yml).*
 
 ### 2. Configure the named.conf files
 
@@ -496,7 +496,7 @@ You can try it by using the [test-dns.sh](/tests/test-dns.sh)
 
 This project contains a **Continuous Integration** workflow made with **Github Actions** features to ensure the quality of the code and the correct syntax in the Ansible files.
 
-  - **Deploy yaml file was created to trigger the action when a commit is done**. How you can see the test are running in Ubuntu 24.04 and there is a job to install the necessary dependencies for run [Ansible Lint](https://ansible.readthedocs.io/projects/lint/) and another one to run it.
+  - **Deploy yaml file was created to trigger the action when a commit is done**. How you can see the test are running in Ubuntu 24.04 and there is a job to install the necessary dependencies for [Ansible Lint](https://ansible.readthedocs.io/projects/lint/) and another one to run it.
 
     ```yml
     name: ansible-lint
@@ -524,7 +524,7 @@ This project contains a **Continuous Integration** workflow made with **Github A
               ansible-lint ansible/
     ```
 
-  - When we do a `git push` command the test are triggered and passed.
+  - When we do a `git push` command the test is triggered and passed.
 
     <div align="center">
       <img src=".imgs/ansible-lint-passed.png" alt="ansible-lint">

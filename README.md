@@ -1,7 +1,7 @@
 # FTP Server and DNS Configuration using Vagrant + Ansible
 
 <div align="center">
-    <img src="docs/.imgs/ftp-diag.png" alt="diagram">
+    <img src="docs/.imgs/ftp-diag.png" alt="diagram" style="width: 50%; height: auto;">
 </div>
 
 This project configures a secure and functional FTP server using vsftpd on Linux. The server supports anonymous and local users, with support for SSL/TLS encryption and `chroot` options for specific users.
@@ -16,10 +16,10 @@ This project configures a secure and functional FTP server using vsftpd on Linux
 
 ## Requirements
 
-- Unix-based system
-- Ansible for automated setup
-- Vagrant 2.4.3 or latest
-- FTP Client like `Filezilla` or `lftp`
+- **Unix-based system**
+- **Ansible** for automated setup
+- **Vagrant 2.4.3** or latest
+- **FTP Client** like `Filezilla` or `lftp`
 
 ## Documentation
 
@@ -28,7 +28,7 @@ To see documentation of the project you can [click here](https://github.com/spor
 ## Installation
 
 > [!NOTE]
-> This installation instructions are provided for Unix systems only
+> *This installation instructions are provided for **Unix systems** only*.
 
 #### 1. Clone the repository
 
