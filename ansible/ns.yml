@@ -21,15 +21,11 @@
         - { src: "{{ dns_path }}db.sri.ies", dest: /var/lib/bind/ }
         - { src: "{{ dns_path }}rev.sri.ies", dest: /var/lib/bind/ }
 
-    - name: Copy resolv.conf
-      ansible.builtin.copy:
-        src: "{{ dns_path }}resolv.conf"
-        dest: /etc/resolv.conf
-        mode: '0644'
-
-    - name: Validate bind9 config
-      ansible.legacy.command: named-checkconf
+    - name: Validate DNS configuration
+      ansible.builtin.command: named-checkconf
+      register: conf_check
       changed_when: false
+      failed_when: conf_check.rc != 0
 
     - name: Restart bind9 service
       ansible.legacy.systemd:
