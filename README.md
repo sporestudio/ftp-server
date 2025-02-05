@@ -82,4 +82,8 @@ This project is under [GNU General Public License](./LICENSE)
 
 ## Authors
 
-This project was created by [Jorge Rodriguez](https://github.com/sporestudio), [Juan Diego](https://github.com/JuanDiego1406), [Miguel Angel](https://github.com/leogamer644).
+This project was created by
+
+- [Jorge Rodriguez](https://github.com/sporestudio) (Developer Leader).
+- [Juan Diego](https://github.com/JuanDiego1406) (Developer).
+- [Miguel Angel](https://github.com/leogamer644) (Developer).
